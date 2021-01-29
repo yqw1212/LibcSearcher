@@ -15,13 +15,20 @@ class LibcSearcher(object):
             os.path.realpath(os.path.dirname(__file__)), "libc-database/db/")
         self.db = ""
 
+    def long2int(self,num):
+        assert isinstance(num, (int, long))
+        return int(num & sys.maxint)
+
     def add_condition(self, func, address):
         if not isinstance(func, str):
             print("The function should be a string")
             sys.exit()
         if not isinstance(address, int):
-            print("The address should be an int number")
-            sys.exit()
+            if isinstance(address, long):
+                address = self.long2int(address)
+            else:
+                print("The address should be an int number")
+                sys.exit()
         self.condition[func] = address
 
     #Wrapper for libc-database's find shell script.
